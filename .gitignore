@@ -1,0 +1,32 @@
+# Workspace Dependencies
+node_modules/
+.pnpm-store/
+
+# IDE and System Files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Compilation and Build Outputs
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Telemetry and Monorepo Caches
+.turbo/
+.cache/
+
+# Local Environment Secrets
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+*.pem
+
+# Turbo / Cache Artifacts
+*.tar.zst

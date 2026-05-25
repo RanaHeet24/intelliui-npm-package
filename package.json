@@ -1,0 +1,19 @@
+{
+  "name": "intelliui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@11.2.2",
+  "type": "module",
+  "devDependencies": {
+    "turbo": "^2.9.14"
+  }
+}
