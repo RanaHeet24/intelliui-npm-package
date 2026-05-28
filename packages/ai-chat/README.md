@@ -1,261 +1,664 @@
-# intelliui-ai-chat
+# IntelliUI AI Chat
 
-AI-native React chat infrastructure for modern AI applications.
+AI-native React chat runtime and orchestration system for building modern AI applications.
 
-Built for developers who want production-style AI interactions without rebuilding streaming, markdown rendering, syntax highlighting, orchestration, and conversational UX from scratch.
-
----
-
-## Overview
-
-`intelliui-ai-chat` is the first package in the IntelliUI ecosystem — a growing collection of AI-native React primitives focused on conversational interfaces and AI application UX.
-
-Unlike traditional React UI libraries that focus on generic web interfaces, IntelliUI is designed specifically for AI interaction systems.
+IntelliUI provides composable AI interaction primitives, streaming orchestration, extensible rendering systems, and customizable AI-native UX foundations for React applications.
 
 ---
 
-## Features
+# Features
 
-* Real-time token streaming
-* Markdown + GFM rendering
-* Syntax-highlighted code blocks
-* AI-native message orchestration
-* Provider-ready architecture
-* Smart auto-scroll behavior
-* Loading and thinking states
-* Reusable renderer system
-* Portable styles distribution
+* AI-native chat architecture
+* Streaming responses
+* Markdown rendering
+* Syntax highlighted code blocks
+* AI reasoning renderer
+* Artifact rendering
+* File attachment support
+* Extensible renderer system
+* Component override system
+* Headless runtime hooks
+* Backend agnostic architecture
+* Modern AI workspace UI
 * TypeScript support
-* ESM + CommonJS exports
-* Secure server-side integration support
+* Custom adapters
+* Slot-based customization
+* Local persistence
+* Modern AI UX orchestration
 
 ---
 
-## Installation
+# Installation
 
 ```bash
 npm install intelliui-ai-chat
 ```
 
+or
+
 ```bash
 pnpm add intelliui-ai-chat
 ```
 
+---
+
+# Quick Start (Next.js)
+
+## 1. Install Dependencies
+
 ```bash
-yarn add intelliui-ai-chat
+npm install intelliui-ai-chat @google/generative-ai
 ```
 
 ---
 
-# Quick Start
+## 2. Create Environment Variable
 
-## 1. Import the component
+Create:
 
-```tsx
-import { AIChat, AIProvider } from "intelliui-ai-chat"
-import "intelliui-ai-chat/styles.css"
+```bash
+.env.local
 ```
+
+Add:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+IMPORTANT:
+
+Never expose API keys in frontend React components.
+
+API keys should always remain server-side.
 
 ---
 
-## 2. Configure the provider
+## 3. Create API Route
 
-```tsx
-export default function App() {
-  return (
-    <AIProvider
-      provider="gemini"
-      apiEndpoint="/api/chat"
-      persist
-    >
-      <AIChat />
-    </AIProvider>
-  )
-}
+Create:
+
+```bash
+app/api/chat/route.ts
 ```
 
----
-
-## 3. Create a secure server route
-
-Example Next.js route:
+Add:
 
 ```ts
-import { NextResponse } from "next/server"
-import { streamGeminiResponse } from "intelliui-ai-chat/server"
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(
+  process.env.GEMINI_API_KEY!
+);
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json()
+    const body = await req.json();
 
-    const apiKey = process.env.GEMINI_API_KEY
+    const userMessage = body.message;
 
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Missing GEMINI_API_KEY" },
-        { status: 500 }
-      )
-    }
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
 
-    const stream = await streamGeminiResponse(messages, apiKey)
+    const result = await model.generateContent(
+      userMessage
+    );
 
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/plain; charset=utf-8",
-        "Transfer-Encoding": "chunked"
+    const response = result.response.text();
+
+    return Response.json({
+      role: "assistant",
+      content: response,
+      status: "done",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return Response.json(
+      {
+        error: "Something went wrong.",
+      },
+      {
+        status: 500,
       }
-    })
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || "Internal Server Error" },
-      { status: 500 }
-    )
+    );
   }
 }
 ```
 
 ---
 
-# Example
+## 4. Use IntelliUI
 
 ```tsx
-import { AIChat, AIProvider } from "intelliui-ai-chat"
-import "intelliui-ai-chat/styles.css"
+"use client";
 
-export default function App() {
+import { AIChat } from "intelliui-ai-chat";
+
+export default function Page() {
   return (
-    <AIProvider
-      provider="gemini"
-      apiEndpoint="/api/chat"
-      persist
-    >
-      <AIChat />
-    </AIProvider>
-  )
+    <div className="h-screen">
+      <AIChat api="/api/chat" />
+    </div>
+  );
 }
 ```
 
 ---
 
-# Advanced Usage
+# Quick Start (Node.js + Express)
 
-You can compose lower-level primitives directly for custom AI experiences.
+## 1. Install Dependencies
+
+```bash
+npm install express cors dotenv @google/generative-ai
+```
+
+---
+
+## 2. Create Environment Variable
+
+Create:
+
+```bash
+.env
+```
+
+Add:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+---
+
+## 3. Create Server
+
+Create:
+
+```bash
+server.js
+```
+
+Add:
+
+```js
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+const genAI = new GoogleGenerativeAI(
+  process.env.GEMINI_API_KEY
+);
+
+app.post("/api/chat", async (req, res) => {
+  try {
+    const { message } = req.body;
+
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+    });
+
+    const result = await model.generateContent(
+      message
+    );
+
+    const response = result.response.text();
+
+    res.json({
+      role: "assistant",
+      content: response,
+      status: "done",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Something went wrong.",
+    });
+  }
+});
+
+const PORT = 3001;
+
+app.listen(PORT, () => {
+  console.log(
+    `Server running on http://localhost:${PORT}`
+  );
+});
+```
+
+---
+
+## 4. Run Server
+
+```bash
+node server.js
+```
+
+---
+
+## 5. Connect IntelliUI Frontend
 
 ```tsx
-import {
-  useChat,
-  PromptInput,
-  MessageRenderer
-} from "intelliui-ai-chat"
+"use client";
 
-export function CustomChat() {
-  const {
-    messages,
-    input,
-    setInput,
-    sendMessage,
-    isLoading
-  } = useChat({
-    provider: "gemini",
-    persist: true
-  })
+import { AIChat } from "intelliui-ai-chat";
 
+export default function Page() {
   return (
-    <div className="custom-chat">
-      <div className="messages">
-        {messages.map((message) => (
-          <div key={message.id}>
-            <MessageRenderer message={message} />
-          </div>
-        ))}
-      </div>
-
-      <PromptInput
-        value={input}
-        onChange={setInput}
-        onSubmit={sendMessage}
-        disabled={isLoading}
-      />
+    <div className="h-screen">
+      <AIChat api="http://localhost:3001/api/chat" />
     </div>
-  )
+  );
 }
 ```
+
+---
+
+# Core Components
+
+## AIChat
+
+Main orchestration component responsible for:
+
+* runtime state
+* streaming
+* rendering pipeline
+* orchestration flow
+* AI-native interaction UX
+
+```tsx
+<AIChat api="/api/chat" />
+```
+
+---
+
+## AIMessage
+
+Composable AI message renderer.
+
+Supports:
+
+* reasoning
+* artifacts
+* tools
+* markdown
+* future renderers
+
+```tsx
+<AIMessage message={message} />
+```
+
+---
+
+## AIReasoning
+
+Lightweight reasoning/thinking renderer.
+
+```tsx
+<AIReasoning reasoning="Analyzing prompt..." />
+```
+
+---
+
+## AIArtifacts
+
+Render generated AI artifacts such as:
+
+* code
+* markdown
+* tables
+* future interactive outputs
+
+```tsx
+<AIArtifacts artifacts={artifacts} />
+```
+
+---
+
+## useChat
+
+Headless runtime hook for fully custom AI interfaces.
+
+```tsx
+const chat = useChat();
+```
+
+---
+
+# Backend Architecture
+
+IntelliUI is backend agnostic.
+
+Frontend handles:
+
+* rendering
+* orchestration
+* streaming UX
+* runtime state
+
+Backend handles:
+
+* API keys
+* providers
+* business logic
+* tools
+* orchestration
+* databases
+
+Recommended architecture:
+
+```txt
+Frontend (IntelliUI)
+↓
+Backend Route / API
+↓
+Provider / AI Runtime
+```
+
+---
+
+# Extensibility
+
+IntelliUI is designed to be fully customizable.
+
+---
+
+## Component Overrides
+
+Replace internal components while preserving runtime.
+
+```tsx
+<AIChat
+  components={{
+    Message: CustomMessage,
+    Input: CustomInput,
+  }}
+/>
+```
+
+---
+
+## Custom Renderers
+
+Inject custom rendering behavior.
+
+```tsx
+<AIChat
+  renderers={{
+    reasoning: MyReasoningRenderer,
+  }}
+/>
+```
+
+---
+
+## Headless Usage
+
+Build fully custom AI workspaces.
+
+```tsx
+const chat = useChat();
+```
+
+---
+
+## Adapter System
+
+Connect custom backends.
+
+```tsx
+<AIProvider adapter={customAdapter} />
+```
+
+Example:
+
+```ts
+const customAdapter = {
+  async sendMessage(payload) {
+    return fetch("/api/chat", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  },
+};
+```
+
+---
+
+## Slots
+
+Customize workspace layout.
+
+```tsx
+<AIChat
+  slots={{
+    sidebar: MySidebar,
+  }}
+/>
+```
+# Adaptive Embeddable Runtime
+
+IntelliUI now supports adaptive embeddable AI runtime architecture.
+
+AIChat can automatically adapt inside:
+
+* drawers
+* widgets
+* dashboards
+* sidebars
+* modals
+* split layouts
+* ecommerce assistants
+* SaaS copilots
+* mobile views
+
+without requiring manual layout fixes.
+
+---
+
+## Adaptive Layout Modes
+
+IntelliUI supports multiple adaptive runtime modes:
+
+* workspace
+* compact
+* drawer
+* widget
+* mobile
+
+Modes can automatically switch based on container size using ResizeObserver-powered layout orchestration.
+
+You can also manually override runtime behavior:
+
+```tsx
+<AIChat mode="drawer" />
+```
+
+```tsx
+<AIChat adaptive={false} mode="workspace" />
+```
+
+---
+
+## Container-Aware Runtime
+
+Unlike traditional fullscreen chat UIs, IntelliUI is designed to become fully embeddable AI infrastructure.
+
+The runtime automatically adapts:
+
+* sidebar visibility
+* prompt input density
+* message spacing
+* renderer visibility
+* compact layouts
+* responsive interactions
+
+based on available container constraints.
+
+---
+
+## Drawer Integration Example
+
+```tsx
+import { AIChat } from "intelliui-ai-chat";
+
+export default function AIDrawer() {
+  return (
+    <div className="drawer">
+      <AIChat mode="drawer" />
+    </div>
+  );
+}
+```
+
+---
+
+## Adaptive Orchestration
+
+The runtime intelligently adjusts:
+
+* AIReasoning
+* AICitations
+* AIArtifacts
+* AIToolRenderer
+* PromptInput
+* AIConversationSidebar
+
+depending on active layout mode.
+
+Example:
+
+* workspace → full orchestration
+* drawer → compact orchestration
+* widget → minimal rendering
+* mobile → simplified runtime
+
+---
+
+## Extensible Runtime Architecture
+
+Adaptive behavior works together with:
+
+* custom slots
+* renderer overrides
+* custom layouts
+* headless usage
+* custom message components
+* external adapters
+
+without breaking runtime orchestration.
+
+Example:
+
+```tsx
+<AIChat
+  components={{
+    Message: CustomMessage,
+  }}
+  slots={{
+    header: CustomHeader,
+  }}
+/>
+```
+
+---
+
+## Embeddable AI Infrastructure
+
+IntelliUI is designed for modern AI-native products:
+
+* ecommerce AI assistants
+* AI dashboards
+* SaaS copilots
+* workspace agents
+* customer support panels
+* floating assistants
+* embedded AI systems
+
+The package no longer assumes fullscreen ownership and now behaves as adaptive AI infrastructure.
 
 ---
 
 # Architecture
 
-The package uses a dual-entry architecture:
+IntelliUI internally follows:
 
-## Client Entry
-
-```ts
-intelliui-ai-chat
+```txt
+Prompt
+↓
+Runtime
+↓
+Structured Message
+↓
+AIMessage
+↓
+Renderers
 ```
 
-Contains:
+Rendering pipeline:
 
-* UI components
-* hooks
-* renderers
-* orchestration
-* styles
-
----
-
-## Server Entry
-
-```ts
-intelliui-ai-chat/server
+```txt
+AIMessage
+ ├── AIReasoning
+ ├── AIContent
+ ├── AIArtifacts
+ ├── AIToolRenderer
+ └── AIMessageActions
 ```
 
-Contains:
+---
 
-* secure provider communication
-* streaming helpers
-* backend utilities
+# Examples
 
-This separation keeps API keys securely on the server.
+Planned examples:
+
+* Next.js Starter
+* Express Backend
+* Headless Chat
+* Custom Renderers
+* Custom Sidebar
+* Adapter Examples
 
 ---
 
-# Current Focus
+# Roadmap
 
-The IntelliUI ecosystem is currently focused on:
+Planned future systems:
 
-* AI chat interfaces
-* streaming UX
-* AI renderer systems
-* provider abstractions
-* conversational frontend primitives
-
----
-
-# Planned Ecosystem
-
-Future packages and primitives may include:
-
-* AIInput
-* AIMessage
-* AICodeBlock
-* AIReasoning
-* AICitations
-* AIFileUpload
-* AISearchAssistant
-* Tool rendering systems
-* Multi-provider orchestration
+* AI workflows
+* MCP tools
+* Agent orchestration
+* RAG systems
+* Multimodal rendering
+* AI workspaces
+* Streaming artifacts
+* AI memory systems
 
 ---
 
-# Tech Stack
+# Philosophy
 
-* React
-* TypeScript
-* Turborepo
-* pnpm
-* tsup
-* react-markdown
-* react-syntax-highlighter
+IntelliUI is not designed to be a locked chat component.
+
+The goal is to provide extensible AI-native interaction infrastructure that developers can customize, extend, and build upon.
+
+---
+
+# Documentation
+
+Docs:
+https://intelliui.vercel.app
 
 ---
 

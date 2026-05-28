@@ -4,6 +4,10 @@ export interface AIProviderConfig {
   provider: 'gemini' | 'openai' | 'anthropic' | string;
   apiEndpoint?: string;
   persist?: boolean;
+  adapter?: {
+    sendMessage?: (payload: { message: string; history: any[]; files?: any[] }) => Promise<Response | any>;
+  };
+  theme?: string;
 }
 
 const AIProviderContext = createContext<AIProviderConfig | undefined>(undefined);
@@ -14,15 +18,22 @@ export interface AIProviderProps extends AIProviderConfig {
 
 /**
  * Root context provider for configuring AI chat settings globally.
- * Centrally configures the chosen AI provider, api route, and persistence options.
+ * Centrally configures the chosen AI provider, api route, adapter layers, and persistence options.
  * Target usage:
- * <AIProvider provider="gemini">
+ * <AIProvider provider="gemini" adapter={customAdapter} theme="dark">
  *   <AIChat />
  * </AIProvider>
  */
-export function AIProvider({ provider, apiEndpoint = '/api/chat', persist = false, children }: AIProviderProps) {
+export function AIProvider({ 
+  provider, 
+  apiEndpoint = '/api/chat', 
+  persist = false, 
+  adapter,
+  theme,
+  children 
+}: AIProviderProps) {
   return (
-    <AIProviderContext.Provider value={{ provider, apiEndpoint, persist }}>
+    <AIProviderContext.Provider value={{ provider, apiEndpoint, persist, adapter, theme }}>
       {children}
     </AIProviderContext.Provider>
   );

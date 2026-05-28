@@ -1,13 +1,23 @@
 "use client";
 
-export { AIChat } from "./components/AIChat"
-export { Message } from "./components/Message"
-export { PromptInput } from "./components/PromptInput"
-export { ThinkingIndicator } from "./components/ThinkingIndicator"
-export { MarkdownRenderer } from "./renderers/markdown/MarkdownRenderer"
-export { CodeBlock } from "./renderers/code/CodeBlock"
-export { MessageRenderer } from "./renderers/MessageRenderer"
-export * from "./providers/AIProvider"
-export * from "./hooks/useChat"
-export * from "./hooks/useAutoScroll"
-export * from "./types"
+export { AIChat } from "./components/AIChat";
+export { Message } from "./components/Message";
+export { AIMessage } from "./components/AIMessage";
+export { AIReasoning } from "./components/AIReasoning";
+export { AIContent } from "./components/AIContent";
+export { AICitations } from "./components/AICitations";
+export { AIToolRenderer } from "./components/AIToolRenderer";
+export { AIArtifacts } from "./components/AIArtifacts";
+export { AIFileUpload } from "./components/AIFileUpload";
+export { AIMessageActions } from "./components/AIMessageActions";
+export { AIConversationSidebar } from "./components/AIConversationSidebar";
+export { PromptInput, PromptInput as AIInput } from "./components/PromptInput";
+export { ThinkingIndicator } from "./components/ThinkingIndicator";
+export { MarkdownRenderer } from "./renderers/markdown/MarkdownRenderer";
+export { CodeBlock } from "./renderers/code/CodeBlock";
+export { MessageRenderer } from "./renderers/MessageRenderer";
+export * from "./providers/AIProvider";
+export * from "./hooks/useChat";
+export * from "./hooks/useAutoScroll";
+export * from "./types";
+export * from "./layout";
