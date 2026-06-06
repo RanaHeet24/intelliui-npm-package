@@ -36,7 +36,7 @@ The same `AIChat` component can be embedded inside:
 * Widgets
 * Internal tools
 
-![alt text](image.png)
+![alt text](https://raw.githubusercontent.com/RanaHeet24/intelliui-npm-package/main/packages/ai-chat/image.png)
 
 The example above uses the exact same component:
 
@@ -50,7 +50,7 @@ The example above uses the exact same component:
 
 IntelliUI can also run as a full AI workspace.
 
-![alt text](image-1.png)
+![alt text](https://raw.githubusercontent.com/RanaHeet24/intelliui-npm-package/main/packages/ai-chat/image-1.png)
 
 Adaptive Modes:
 

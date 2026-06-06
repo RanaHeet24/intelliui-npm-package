@@ -1,6 +1,6 @@
 {
   "name": "intelliui-ai-chat",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -8,9 +8,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RanaHeet24/intelliui-npm-package.git"
+    "url": "git+https://github.com/RanaHeet24/intelliui-npm-package.git",
+    "directory": "packages/ai-chat"
   },
-  "homepage": "https://github.com/RanaHeet24/intelliui-npm-package#readme",
+  "homepage": "https://intelliui.vercel.app/",
   "bugs": {
     "url": "https://github.com/RanaHeet24/intelliui-npm-package/issues"
   },
