@@ -36,7 +36,7 @@ The same `AIChat` component can be embedded inside:
 * Widgets
 * Internal tools
 
-![alt text](https://intelliui.vercel.app/image.png)
+intelliui/packages/ai-chat/image.png
 
 The example above uses the exact same component:
 
@@ -50,7 +50,7 @@ The example above uses the exact same component:
 
 IntelliUI can also run as a full AI workspace.
 
-![alt text](https://intelliui.vercel.app/image-1.png)
+intelliui/packages/ai-chat/image-1.png
 
 Adaptive Modes:
 
