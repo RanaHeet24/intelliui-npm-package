@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { streamGeminiResponse } from '@intelliui/ai-chat/server';
-import type { ChatMessage } from '@intelliui/ai-chat';
+import { streamGeminiResponse } from 'intelliui-ai-chat/server';
+import type { ChatMessage } from 'intelliui-ai-chat';
 
 export async function POST(req: Request) {
   try {

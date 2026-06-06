@@ -1,4 +1,4 @@
-import { AIChat, AIProvider } from "@intelliui/ai-chat";
+import { AIChat, AIProvider } from "intelliui-ai-chat";
 
 export default function Home() {
   return (
