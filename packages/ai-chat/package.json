@@ -1,6 +1,38 @@
 {
   "name": "intelliui-ai-chat",
   "version": "0.1.1",
+  "description": "Adaptive AI chat runtime for React. Connect any backend route and embed AI chat anywhere in your application.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RanaHeet24/intelliui-npm-package.git"
+  },
+  "homepage": "https://github.com/RanaHeet24/intelliui-npm-package#readme",
+  "bugs": {
+    "url": "https://github.com/RanaHeet24/intelliui-npm-package/issues"
+  },
+  "keywords": [
+    "ai",
+    "react",
+    "chat",
+    "llm",
+    "assistant",
+    "ai-chat",
+    "ai-runtime",
+    "openai",
+    "gemini",
+    "claude",
+    "streaming",
+    "typescript",
+    "widget",
+    "sidebar",
+    "drawer",
+    "embedded-ai",
+    "react-chat",
+    "headless-chat",
+    "chat-ui",
+    "adaptive-ui"
+  ],
   "files": [
     "dist"
   ],
