@@ -1,6 +1,9 @@
 {
   "name": "intelliui-ai-chat",
-  "version": "0.1.1",
+  "version": "0.1.4",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "description": "Adaptive AI chat runtime for React. Connect any backend route and embed AI chat anywhere in your application.",
   "license": "MIT",
   "repository": {
@@ -39,13 +42,13 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./server": {
       "types": "./dist/server.d.ts",
-      "import": "./dist/server.mjs",
-      "require": "./dist/server.js"
+      "import": "./dist/server.js",
+      "require": "./dist/server.cjs"
     },
     "./styles.css": "./dist/styles.css"
   },

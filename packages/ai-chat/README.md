@@ -1,190 +1,264 @@
-# IntelliUI
+# intelliui-ai-chat
 
-Adaptive AI Chat Runtime for React.
+AI-native React chat infrastructure for modern AI applications.
 
-Write your AI provider logic once on the server.
-
-Drop `<AIChat />` anywhere in your React application.
-
-```jsx
-import { AIChat } from 'intelliui-ai-chat';
-import 'intelliui-ai-chat/styles.css';
-
-function App() {
-  return <AIChat api="/api/chat" />;
-}
-```
-
-By decoupling the frontend interface from the backend LLM orchestrator, IntelliUI removes all the typical complexity associated with building AI interfaces:
-
-* **No frontend streaming logic:** Handles server-sent events, response chunking, and streaming text updates automatically.
-* **No chat state management:** Maintains message history, typing indicators, thinking indicators, and error states internally.
-* **No message orchestration:** Standardizes payload delivery and handles conversational turns transparently.
-* **No AI UI plumbing:** No need to build auto-scrolling containers, custom markdown parsers, or code block syntax highlight configurations from scratch.
+Built for developers who want production-style AI interactions without rebuilding streaming, markdown rendering, syntax highlighting, orchestration, and conversational UX from scratch.
 
 ---
 
-## Integrates Anywhere
+## Overview
 
-The same `AIChat` component can be embedded inside:
+`intelliui-ai-chat` is the first package in the IntelliUI ecosystem — a growing collection of AI-native React primitives focused on conversational interfaces and AI application UX.
 
-* Ecommerce stores
-* SaaS products
-* Admin panels
-* Sidebars
-* Drawers
-* Widgets
-* Internal tools
-
-![alt text](image.png)
-
-The example above uses the exact same component:
-
-```jsx
-<AIChat api="/api/chat" />
-```
+Unlike traditional React UI libraries that focus on generic web interfaces, IntelliUI is designed specifically for AI interaction systems.
 
 ---
 
-## Workspace Mode
+# Features
 
-IntelliUI can also run as a full AI workspace.
-
-![alt text](image-1.png)
-
-Adaptive Modes:
-
-* Workspace
-* Drawer
-* Widget
-* Compact
-* Mobile
-
----
-
-## Features
-
-* **Adaptive Runtime:** Adapts its interface dynamically depending on the layout mode (Drawer, Widget, Workspace, Compact, Mobile).
-* **Workspace Mode:** Render a full-featured standalone AI chat workspace interface.
-* **Drawer Mode:** Slide out a clean sidebar overlay for contextual AI assistance.
-* **Widget Mode:** Embed a floating helper bubble or minimal chat window.
-* **Mobile Mode:** Fully responsive UI layout optimized for touch targets.
-* **Streaming Responses:** Seamlessly consumes chunked text streams and updates the UI in real-time.
-* **Component Overrides:** Override individual layout parts to control style and layout behavior.
-* **Slots:** Inject custom headers, input sections, or action drawers via defined React slot APIs.
-* **Custom Renderers:** Swap out default text/code blocks with customized renderers.
-* **Headless Hooks:** Don't want our UI? Build your own styling with the core state-machine hooks (`useChat`).
-* **Backend Agnostic:** Works with any backend endpoint (Next.js, Node/Express, FastAPI, Python, Nest.js, etc.) that outputs plain text streams.
-* **TypeScript Support:** Written in TypeScript with full type-safety for all components and configurations.
+* Real-time token streaming
+* Markdown + GFM rendering
+* Syntax-highlighted code blocks
+* AI-native message orchestration
+* Provider-ready architecture
+* Smart auto-scroll behavior
+* Loading and thinking states
+* Reusable renderer system
+* Portable styles distribution
+* TypeScript support
+* ESM + CommonJS exports
+* Secure server-side integration support
 
 ---
 
-## Feature Comparison
-
-| Feature             | IntelliUI | Basic Chat UI |
-| ------------------- | --------- | ------------- |
-| Adaptive Runtime    | ✅         | ❌             |
-| Drawer Mode         | ✅         | ❌             |
-| Widget Mode         | ✅         | ❌             |
-| Sidebar Mode        | ✅         | ❌             |
-| Component Overrides | ✅         | ❌             |
-| Headless Hooks      | ✅         | ❌             |
-| Backend Agnostic    | ✅         | ❌             |
-
----
-
-## Use Cases
-
-* **Ecommerce Assistants:** Product recommendations, item searches, and customer shopping drawer assistance.
-* **SaaS Assistants:** Contextual help bars, billing queries, and dashboard sidebars.
-* **Customer Support:** Auto-reply panels and troubleshooting chats embedded in user account consoles.
-* **Internal Tools:** Developer dashboards, prompt playgrounds, and quick analytics chats.
-* **Embedded Widgets:** Minimal floating chat bubbles in marketing landing pages.
-* **Sidebar Assistants:** Collapsible panels nested inside existing application layouts.
-* **Workspace Interfaces:** Rich standalone chat workspaces designed for heavy document querying or analysis.
-
----
-
-## Quick Start
-
-### 1. Install Dependencies
+## Installation
 
 ```bash
 npm install intelliui-ai-chat
-# or
+```
+
+```bash
 pnpm add intelliui-ai-chat
-# or
+```
+
+```bash
 yarn add intelliui-ai-chat
 ```
 
 ### 2. Wrap App with config (Optional) or directly configure the Prop
 
-You can either pass settings through `AIProvider` or pass props directly to `<AIChat />`.
+# Quick Start
+
+## 1. Import the component
 
 ```tsx
-import { AIChat, AIProvider } from "intelliui-ai-chat";
-import "intelliui-ai-chat/styles.css";
+import { AIChat, AIProvider } from "intelliui-ai-chat"
+import "intelliui-ai-chat/styles.css"
+```
 
+---
+
+## 2. Configure the provider
+
+```tsx
 export default function App() {
   return (
-    <AIProvider provider="gemini" apiEndpoint="/api/chat" persist>
+    <AIProvider
+      provider="gemini"
+      apiEndpoint="/api/chat"
+      persist
+    >
       <AIChat />
     </AIProvider>
-  );
+  )
 }
 ```
 
 ### 3. Setup a Secure Server Route
 
-Create a backend route on your server (e.g., Next.js App Router) to call the Gemini, OpenAI, or Claude API securely.
+## 3. Create a secure server route
+
+Example Next.js route:
 
 ```ts
-import { NextResponse } from 'next/server';
-import { streamGeminiResponse } from 'intelliui-ai-chat/server';
+import { NextResponse } from "next/server"
+import { streamGeminiResponse } from "intelliui-ai-chat/server"
 
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
-    const apiKey = process.env.GEMINI_API_KEY;
+    const { messages } = await req.json()
+
+    const apiKey = process.env.GEMINI_API_KEY
 
     if (!apiKey) {
-      return NextResponse.json({ error: 'Missing GEMINI_API_KEY' }, { status: 500 });
+      return NextResponse.json(
+        { error: "Missing GEMINI_API_KEY" },
+        { status: 500 }
+      )
     }
 
-    const stream = await streamGeminiResponse(messages, apiKey);
+    const stream = await streamGeminiResponse(messages, apiKey)
 
     return new Response(stream, {
       headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Transfer-Encoding': 'chunked',
-      },
-    });
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked"
+      }
+    })
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || 'Internal Server Error' },
+      { error: error.message || "Internal Server Error" },
       { status: 500 }
-    );
+    )
   }
 }
 ```
 
 ---
 
-## Architecture
+# Example
 
-The package splits the code into client and server entry points to keep dependencies decoupled and prevent server-side LLM dependencies (like API keys and provider client SDKs) from bloating the React client bundle.
+```tsx
+import { AIChat, AIProvider } from "intelliui-ai-chat"
+import "intelliui-ai-chat/styles.css"
 
-### Client Entry (`intelliui-ai-chat`)
-* React Primitives (`AIChat`, `PromptInput`)
-* React State Machine Hook (`useChat`)
-* Style Utilities and Layout Classes
-
-### Server Entry (`intelliui-ai-chat/server`)
-* Stream processing utilities
-* LLM provider stream wrapper (`streamGeminiResponse`)
+export default function App() {
+  return (
+    <AIProvider
+      provider="gemini"
+      apiEndpoint="/api/chat"
+      persist
+    >
+      <AIChat />
+    </AIProvider>
+  )
+}
+```
 
 ---
 
-## License
+# Advanced Usage
+
+You can compose lower-level primitives directly for custom AI experiences.
+
+```tsx
+import {
+  useChat,
+  PromptInput,
+  MessageRenderer
+} from "intelliui-ai-chat"
+
+export function CustomChat() {
+  const {
+    messages,
+    input,
+    setInput,
+    sendMessage,
+    isLoading
+  } = useChat({
+    provider: "gemini",
+    persist: true
+  })
+
+  return (
+    <div className="custom-chat">
+      <div className="messages">
+        {messages.map((message) => (
+          <div key={message.id}>
+            <MessageRenderer message={message} />
+          </div>
+        ))}
+      </div>
+
+      <PromptInput
+        value={input}
+        onChange={setInput}
+        onSubmit={sendMessage}
+        disabled={isLoading}
+      />
+    </div>
+  )
+}
+```
+
+---
+
+# Architecture
+
+The package uses a dual-entry architecture:
+
+## Client Entry
+
+```ts
+intelliui-ai-chat
+```
+
+Contains:
+
+* UI components
+* hooks
+* renderers
+* orchestration
+* styles
+
+---
+
+## Server Entry
+
+```ts
+intelliui-ai-chat/server
+```
+
+Contains:
+
+* secure provider communication
+* streaming helpers
+* backend utilities
+
+This separation keeps API keys securely on the server.
+
+---
+
+# Current Focus
+
+The IntelliUI ecosystem is currently focused on:
+
+* AI chat interfaces
+* streaming UX
+* AI renderer systems
+* provider abstractions
+* conversational frontend primitives
+
+---
+
+# Planned Ecosystem
+
+Future packages and primitives may include:
+
+* AIInput
+* AIMessage
+* AICodeBlock
+* AIReasoning
+* AICitations
+* AIFileUpload
+* AISearchAssistant
+* Tool rendering systems
+* Multi-provider orchestration
+
+---
+
+# Tech Stack
+
+* React
+* TypeScript
+* Turborepo
+* pnpm
+* tsup
+* react-markdown
+* react-syntax-highlighter
+
+---
+
+# License
 
 MIT
